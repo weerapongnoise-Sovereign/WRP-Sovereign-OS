@@ -1,0 +1,1229 @@
+
+weerapong wongsrikeaw <weerapong.noise@gmail.com>
+1:37 PM (4 minutes ago)
+to me
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sovereign OS">
+<meta name="theme-color" content="#04080f">
+<title>SOVEREIGN OS v7.7</title>
+<style>
+/* ══════════════════════════════════════
+DESIGN TOKENS
+══════════════════════════════════════ */
+:root{
+--bg:#04080f;--bg2:#080f1a;--bg3:#0d1825;
+--border:#162336;--border2:#1e3350;
+--accent:#00c8ff;--green:#00ff88;--yellow:#ffd700;
+--orange:#ff8c00;--red:#ff2d55;
+--muted:#3a5a78;--text:#b8d4e8;--dim:#4a6a88;
+--font:'SF Mono',ui-monospace,monospace;
+--r:4px;
+--nav-h:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;height:100%}
+body{
+background:var(--bg);color:var(--text);font-family:var(--font);
+font-size:13px;height:100%;overflow:hidden;
+}
+input,select,button{font:inherit;color:inherit;font-size:16px}
+button{touch-action:manipulation;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+/* ══════════════════════════════════════
+LAYOUT
+══════════════════════════════════════ */
+.app{display:flex;flex-direction:column;height:100%;height:100dvh}
+.hdr{
+flex-shrink:0;
+background:rgba(8,15,26,.97);border-bottom:1px solid var(--border2);
+padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top));
+display:flex;align-items:center;justify-content:space-between;
+backdrop-filter:blur(16px);z-index:100;
+}
+.hdr-title{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:4px}
+.hdr-sub{font-size:9px;color:var(--muted);letter-spacing:1px;margin-top:1px}
+.hdr-right{display:flex;gap:6px;align-items:center}
+
+/* Pages */
+.pages{flex:1;overflow:hidden;position:relative}
+.page{
+position:absolute;inset:0;overflow-y:auto;
+-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;
+padding-bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom));
+display:none;
+}
+.page.active{display:block}
+
+/* Bottom Nav */
+.nav{
+flex-shrink:0;
+background:rgba(8,15,26,.97);border-top:1px solid var(--border2);
+display:flex;height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+padding-bottom:env(safe-area-inset-bottom);
+backdrop-filter:blur(16px);z-index:100;
+}
+.nav-item{
+flex:1;display:flex;flex-direction:column;align-items:center;
+justify-content:center;gap:3px;padding:8px 4px;
+border:none;background:transparent;color:var(--muted);
+font-family:var(--font);cursor:pointer;transition:color .15s;
+border-top:2px solid transparent;
+}
+.nav-item.active{color:var(--accent);border-top-color:var(--accent)}
+.nav-icon{font-size:18px;line-height:1}
+.nav-lbl{font-size:8px;letter-spacing:1px}
+
+/* ══════════════════════════════════════
+SHARED COMPONENTS
+══════════════════════════════════════ */
+.pad{padding:10px 12px}
+.sh{
+font-size:9px;color:var(--muted);letter-spacing:2px;
+margin:12px 0 6px;display:flex;align-items:center;gap:6px;
+}
+.sh::after{content:'';flex:1;height:1px;background:var(--border)}
+.card{
+background:var(--bg2);border:1px solid var(--border);
+border-radius:var(--r);margin-bottom:8px;
+}
+.card-body{padding:10px 12px}
+.card-hdr{
+display:flex;align-items:center;justify-content:space-between;
+padding:9px 12px;border-bottom:1px solid var(--border);
+}
+.card-title{font-size:9px;color:var(--accent);letter-spacing:2px}
+.card-val{font-size:12px;font-weight:600}
+.irow{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.irow:last-child{margin-bottom:0}
+.iname{font-size:12px;font-weight:500}
+.idesc{font-size:10px;color:var(--muted);margin-top:1px;line-height:1.4}
+.ifield{
+background:var(--bg3);border:1px solid var(--border);color:var(--text);
+font-family:var(--font);font-size:16px;padding:6px 8px;
+border-radius:var(--r);width:90px;text-align:right;min-height:36px;
+}
+.ifield:focus{outline:none;border-color:var(--accent)}
+.isel{
+background:var(--bg3);border:1px solid var(--border);color:var(--text);
+font-family:var(--font);font-size:14px;padding:6px 8px;
+border-radius:var(--r);min-height:36px;
+}
+.isel:focus{outline:none;border-color:var(--accent)}
+.tog{
+background:var(--bg3);border:1px solid var(--border);border-radius:20px;
+width:44px;height:22px;position:relative;cursor:pointer;
+transition:all .25s;flex-shrink:0;
+}
+.tog.on{background:var(--green);border-color:var(--green)}
+.tog-k{
+position:absolute;top:2px;left:2px;width:17px;height:17px;
+background:var(--bg);border-radius:50%;transition:transform .25s;
+}
+.tog.on .tog-k{transform:translateX(22px)}
+.btn{
+background:var(--bg3);border:1px solid var(--border2);color:var(--accent);
+font-family:var(--font);font-size:10px;padding:5px 10px;
+border-radius:var(--r);letter-spacing:1px;transition:all .15s;
+}
+.btn:active{background:var(--accent);color:var(--bg)}
+.btn.spin{opacity:.4;pointer-events:none}
+.run-btn{
+width:100%;background:var(--accent);color:#04080f;border:none;
+font-family:var(--font);font-size:11px;font-weight:700;
+letter-spacing:2px;padding:12px;border-radius:var(--r);margin-top:8px;
+}
+.run-btn:active{opacity:.8}
+.loading{animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.cg{color:var(--green)}.cy{color:var(--yellow)}.co{color:var(--orange)}
+.cr{color:var(--red)}.ca{color:var(--accent)}.cm{color:var(--muted)}
+
+/* Verdict */
+.verdict{
+border-radius:var(--r);padding:14px;margin:0 12px 8px;
+text-align:center;border:1px solid var(--muted);
+background:rgba(58,90,120,.05);
+}
+.verdict-lbl{font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:3px}
+.verdict-text{font-size:20px;font-weight:700;letter-spacing:4px;color:var(--muted)}
+.verdict-sub{font-size:11px;margin-top:4px;color:var(--muted);opacity:.9}
+
+/* Gate */
+.gate{
+display:flex;align-items:center;gap:9px;
+background:var(--bg2);border:1px solid var(--border);
+border-left:2px solid var(--muted);border-radius:var(--r);
+padding:8px 10px;margin-bottom:6px;
+}
+.gate.skipped{opacity:.3}
+.gate-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.gate-info{flex:1;min-width:0}
+.gate-name{font-size:9px;color:var(--accent);letter-spacing:1px}
+.gate-detail{font-size:10px;color:var(--dim);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gate-score{font-size:11px;font-weight:600;flex-shrink:0}
+
+/* Regime bar */
+.rbar{margin-bottom:4px}
+.rbar-h{display:flex;justify-content:space-between;margin-bottom:2px;font-size:9px}
+.rbar-track{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.rbar-fill{height:100%;border-radius:2px;transition:width .5s}
+
+/* Metric card */
+.mcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:9px 11px;margin-bottom:7px}
+.mcard-lbl{font-size:9px;color:var(--muted);letter-spacing:1px;margin-bottom:3px}
+.mcard-val{font-size:20px;font-weight:200}
+.mcard-sub{font-size:10px;margin-top:2px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.fail-banner{
+background:rgba(255,45,85,.08);border:1px dashed var(--red);
+color:var(--red);padding:6px 8px;border-radius:var(--r);font-size:10px;
+margin-top:6px;display:flex;justify-content:space-between;align-items:center;
+}
+.fail-banner button{
+background:var(--red);color:var(--bg);border:none;
+padding:3px 8px;border-radius:3px;font-size:10px;font-weight:600;
+}
+.src-pill{font-size:8px;padding:1px 5px;border-radius:8px;letter-spacing:.5px}
+.src-pill.ok{background:rgba(0,255,136,.12);color:var(--green)}
+.src-pill.fail{background:rgba(255,45,85,.15);color:var(--red)}
+.src-pill.over{background:rgba(255,215,0,.12);color:var(--yellow)}
+
+/* Unlock */
+.unlock-panel{
+background:rgba(255,45,85,.05);border:1px solid rgba(255,45,85,.25);
+border-radius:var(--r);padding:10px 12px;margin-bottom:8px;
+}
+.unlock-title{font-size:9px;color:var(--red);letter-spacing:2px;margin-bottom:7px}
+.unlock-row{
+display:flex;justify-content:space-between;align-items:center;
+padding:5px 0;border-bottom:1px solid rgba(255,45,85,.1);font-size:10px;
+}
+.unlock-row:last-child{border-bottom:none}
+.u-met{color:var(--green)}.u-lock{color:var(--red)}
+
+/* Weight table */
+.wtable{width:100%;border-collapse:collapse;font-size:9px;margin-top:4px}
+.wtable th{padding:4px 6px;background:var(--bg3);color:var(--muted);border:1px solid var(--border);font-weight:400;letter-spacing:1px}
+.wtable td{padding:4px 6px;border:1px solid var(--border)}
+.wtable .wr-active{background:rgba(0,200,255,.08);color:var(--accent)}
+
+/* Data source tabs */
+.src-tabs{display:flex;gap:0;margin-bottom:10px}
+.src-tab{
+flex:1;padding:9px 4px;text-align:center;border:1px solid var(--border);
+font-family:var(--font);font-size:8px;letter-spacing:1px;
+background:var(--bg3);color:var(--muted);cursor:pointer;transition:all .2s;
+}
+.src-tab:first-child{border-radius:var(--r) 0 0 var(--r)}
+.src-tab:last-child{border-radius:0 var(--r) var(--r) 0}
+.src-tab.s-tv{border-color:#2962ff;color:#7aa3ff;background:rgba(41,98,255,.1)}
+.src-tab.s-inv{border-color:#e6333a;color:#ff7a7e;background:rgba(230,51,58,.1)}
+.src-tab.s-man{border-color:var(--yellow);color:var(--yellow);background:rgba(255,215,0,.06)}
+.src-panel{display:none}.src-panel.active{display:block}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.dl-btn{
+display:flex;flex-direction:column;align-items:center;gap:4px;
+padding:10px 6px;background:var(--bg3);border:1px solid var(--border);
+border-radius:var(--r);text-decoration:none;color:var(--text);transition:opacity .2s;
+}
+.dl-btn:active{opacity:.6}
+.dl-btn.tv{border-color:rgba(41,98,255,.4);background:rgba(41,98,255,.05)}
+.dl-btn.inv{border-color:rgba(230,51,58,.4);background:rgba(230,51,58,.05)}
+.dl-icon{font-size:18px}
+.dl-name{font-size:9px;font-weight:600;letter-spacing:1px}
+.dl-sub{font-size:8px;color:var(--muted)}
+
+/* Wizard */
+.wiz-progress{display:flex;gap:3px;margin:0 12px 8px}
+.wiz-step{flex:1;height:3px;background:var(--bg3);border-radius:2px;transition:background .3s}
+.wiz-step.done{background:var(--green)}.wiz-step.active{background:var(--accent)}
+.wiz-labels{display:flex;justify-content:space-between;padding:0 12px;margin-bottom:10px;font-size:9px;color:var(--muted);letter-spacing:1px}
+.wiz-labels .wl-done{color:var(--green)}.wiz-labels .wl-active{color:var(--accent)}
+.wiz-page{display:none}.wiz-page.active{display:block}
+.wiz-hdr{
+margin:0 12px 10px;padding:12px 14px;
+background:var(--bg2);border:1px solid var(--border2);
+border-left:3px solid var(--accent);border-radius:var(--r);
+}
+.wiz-num{font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:2px}
+.wiz-title{font-size:15px;font-weight:600;color:var(--accent);letter-spacing:1px}
+.wiz-desc{font-size:10px;color:var(--dim);margin-top:4px;line-height:1.6}
+.chk-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.chk{
+display:flex;align-items:center;gap:9px;
+background:var(--bg3);border:1px solid var(--border);
+border-radius:var(--r);padding:9px 11px;cursor:pointer;transition:all .15s;
+}
+.chk.checked{border-color:var(--green);background:rgba(0,255,136,.05)}
+.chk.blocked{border-color:var(--red);background:rgba(255,45,85,.05);cursor:not-allowed;opacity:.6}
+.chk.warn-item{border-color:var(--yellow);background:rgba(255,215,0,.04)}
+.chk-box{
+width:20px;height:20px;border-radius:3px;border:1px solid var(--border);
+background:var(--bg);display:flex;align-items:center;justify-content:center;
+font-size:12px;flex-shrink:0;transition:all .15s;
+}
+.chk.checked .chk-box{background:var(--green);border-color:var(--green)}
+.chk.blocked .chk-box{background:var(--red);border-color:var(--red)}
+.chk.warn-item .chk-box{background:var(--yellow);border-color:var(--yellow);color:#04080f}
+.chk-text{flex:1}
+.chk-name{font-size:11px;font-weight:500}
+.chk-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.chk-badge{font-size:8px;padding:2px 6px;border-radius:8px;flex-shrink:0}
+.badge-r{background:rgba(255,45,85,.15);color:var(--red)}
+.badge-o{background:rgba(0,200,255,.1);color:var(--accent)}
+.badge-g{background:rgba(0,255,136,.1);color:var(--green)}
+.tgate{
+border-radius:var(--r);padding:12px;margin:0 12px 10px;
+text-align:center;border:1px solid var(--muted);background:rgba(58,90,120,.04);
+}
+.tg-lbl{font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:3px}
+.tg-status{font-size:17px;font-weight:700;letter-spacing:3px}
+.tg-sub{font-size:10px;margin-top:3px;opacity:.8}
+.wiz-nav{
+display:flex;gap:8px;margin:0 12px 8px;
+}
+.wiz-btn{
+flex:1;padding:12px;border-radius:var(--r);border:1px solid var(--border);
+font-family:var(--font);font-size:10px;font-weight:700;letter-spacing:2px;
+background:var(--bg3);color:var(--muted);transition:all .2s;
+}
+.wiz-btn.primary{background:var(--accent);color:#04080f;border-color:var(--accent)}
+.wiz-btn.success{background:var(--green);color:#04080f;border-color:var(--green)}
+.wiz-btn:disabled{opacity:.3;pointer-events:none}
+
+/* Entry zone */
+.entry-zone{
+background:var(--bg2);border:2px solid var(--accent);
+border-radius:var(--r);padding:12px;margin:0 12px 10px;
+}
+.ez-title{font-size:9px;color:var(--accent);letter-spacing:2px;margin-bottom:8px}
+.ez-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;border-bottom:1px solid var(--border)}
+.ez-row:last-child{border-bottom:none}
+.ez-lbl{font-size:10px;color:var(--muted)}
+.ez-val{font-size:14px;font-weight:600}
+
+/* Sizing result */
+.result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:8px}
+.rc-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)}
+.rc-row:last-child{border-bottom:none}
+.rc-lbl{font-size:10px;color:var(--muted)}
+.rc-val{font-size:12px;font-weight:600}
+.rc-verdict{text-align:center;padding:9px;border-radius:3px;margin-top:7px;font-size:13px;font-weight:700;letter-spacing:1px}
+
+/* Scalper */
+.scalper-phase{display:flex;gap:6px;margin-bottom:10px}
+.phase-btn{
+flex:1;padding:10px;border-radius:var(--r);border:1px solid var(--border);
+font-family:var(--font);font-size:9px;letter-spacing:1px;
+background:var(--bg3);color:var(--muted);transition:all .2s;
+}
+.phase-btn.active{background:rgba(0,200,255,.12);border-color:var(--accent);color:var(--accent)}
+.risk-formula{background:var(--bg3);border-radius:var(--r);padding:10px;margin-bottom:8px;font-size:11px}
+.rf-row{display:flex;justify-content:space-between;padding:3px 0}
+.rf-label{color:var(--muted)}
+.rf-total{font-size:15px;font-weight:600;color:var(--accent);border-top:1px solid var(--border);padding-top:6px;margin-top:3px}
+.mini-status{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.ms-pill{
+font-size:9px;padding:3px 7px;border-radius:8px;
+border:1px solid var(--border);color:var(--muted);
+}
+.ms-pill.ok{border-color:var(--green);color:var(--green);background:rgba(0,255,136,.05)}
+.ms-pill.warn{border-color:var(--yellow);color:var(--yellow)}
+.ms-pill.block{border-color:var(--red);color:var(--red);background:rgba(255,45,85,.05)}
+.ms-pill.live{border-color:#2962ff;color:#7aa3ff}
+
+/* TV Mini */
+.tv-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px}
+.tv-mini{height:140px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+@media(max-width:400px){.tv-grid{grid-template-columns:1fr}.tv-mini{height:120px}}
+
+/* NLI calc */
+.nli-calc{background:var(--bg3);border-radius:var(--r);padding:9px 11px;margin-top:6px;font-size:11px}
+.nli-row{display:flex;justify-content:space-between;padding:2px 0;color:var(--muted)}
+.nli-total{font-size:15px;font-weight:600;padding-top:5px;border-top:1px solid var(--border);margin-top:4px}
+
+/* Bias grid */
+.bias-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.bias-card{
+background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+padding:8px 10px;display:flex;align-items:center;justify-content:space-between;
+}
+.bias-name{font-size:11px;font-weight:500}
+.bias-desc{font-size:9px;color:var(--muted);margin-top:1px}
+
+/* Candle guide */
+.candle-guide{background:var(--bg3);border-radius:var(--r);padding:9px 11px;margin-bottom:8px}
+.cg-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.cg-row:last-child{margin-bottom:0}
+.cg-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.cg-name{font-size:10px;font-weight:500}
+.cg-cond{font-size:9px;color:var(--muted);margin-top:1px}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page.active .pad{animation:fadeUp .18s ease}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ HEADER ══ -->
+<div class="hdr">
+<div>
+<div class="hdr-title">SOVEREIGN OS</div>
+<div class="hdr-sub" id="hdr-sub">v7.7 · WHA OS v2.7 · Scalper v3.3 · WEERAPONG</div>
+</div>
+<div class="hdr-right">
+<button class="btn spin" id="refreshBtn" onclick="refreshAll()">⟳</button>
+</div>
+</div>
+
+<!-- ══ PAGES ══ -->
+<div class="pages">
+
+<!-- ══════════════════════════
+PAGE 1: OVERVIEW
+══════════════════════════ -->
+<div class="page active" id="pg-overview">
+<div class="pad">
+
+<!-- Verdict -->
+<div class="verdict" id="verdictBox">
+<div class="verdict-lbl">SYSTEM VERDICT</div>
+<div class="verdict-text" id="verdictText">LOADING</div>
+<div class="verdict-sub" id="verdictSub">กำลังประมวลผล...</div>
+</div>
+
+<!-- Grade + Score -->
+<div class="card" style="margin:0 12px 8px;padding:12px 14px;display:flex;align-items:center;gap:14px">
+<div style="font-size:46px;font-weight:200;line-height:1" id="gradeLetter">—</div>
+<div>
+<div style="font-size:9px;color:var(--muted);letter-spacing:1px">SIGNAL QUALITY</div>
+<div style="font-size:22px;margin:2px 0" id="gradeScore">—/10</div>
+<div style="font-size:11px;font-weight:500" id="gradeAct">—</div>
+</div>
+</div>
+
+<!-- Regime -->
+<div style="margin:0 12px 8px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r);padding:10px 12px;display:flex;justify-content:space-between;align-items:center" id="regimeBanner">
+<div>
+<div style="font-size:9px;color:var(--muted);letter-spacing:1px">DOMINANT REGIME</div>
+<div style="font-size:15px;font-weight:600;letter-spacing:2px;margin-top:2px" id="regimeVal">—</div>
+</div>
+<div style="font-size:24px;font-weight:200" id="regimePct">—%</div>
+</div>
+
+<div class="pad" style="padding-top:0">
+<div id="regimeBars"></div>
+
+<!-- Regime Unlock -->
+<div id="unlockPanel" style="display:none">
+<div class="sh">REGIME UNLOCK — <span style="color:var(--red)" id="u-count">0/4 MET</span></div>
+<div class="unlock-panel">
+<div class="unlock-title">CRISIS/WAR_INFLATION — TRIGGERS TO EXIT</div>
+<div class="unlock-row"><span>① Brent &lt; $95</span><span id="u-brent" class="u-lock">—</span></div>
+<div class="unlock-row"><span>② VIX &lt; 23 (2 sessions)</span><span id="u-vix" class="u-lock">—</span></div>
+<div class="unlock-row"><span>③ Regime → CHOPPY</span><span id="u-regime" class="u-lock">LOCKED 🔴</span></div>
+<div class="unlock-row"><span>④ SPX &gt; $6,764</span><span id="u-spx" class="u-lock">—</span></div>
+</div>
+</div>
+
+<!-- Engine Weights -->
+<div class="sh">ENGINE WEIGHTS (v7.7 REGIME-AWARE)</div>
+<div class="mcard" style="overflow-x:auto">
+<table class="wtable" id="weightTable">
+<tr><th>REGIME</th><th>MACRO</th><th>FLOW</th><th>CORR</th><th>TECH</th></tr>
+<tr id="wt-war"><td>WAR_INFLATION</td><td>40%</td><td>20%</td><td>25%</td><td style="color:var(--red)">0%</td></tr>
+<tr id="wt-crisis"><td>CRISIS</td><td>40%</td><td>25%</td><td>15%</td><td style="color:var(--red)">0%</td></tr>
+<tr id="wt-growth"><td>GROWTH</td><td>25%</td><td>25%</td><td>15%</td><td>20%</td></tr>
+<tr id="wt-default"><td>OTHER</td><td>30%</td><td>25%</td><td>15%</td><td>15%</td></tr>
+</table>
+</div>
+
+<!-- Gates -->
+<div class="sh">GATE PIPELINE G0→G6 (SEQUENTIAL)</div>
+<div id="gateSummary"></div>
+
+<!-- Global Risk -->
+<div class="sh">GLOBAL RISK STATE</div>
+<div class="gate" id="globalRiskCard">
+<div class="gate-icon">⏳</div>
+<div class="gate-info"><div class="gate-name">GLOBAL RISK</div><div class="gate-detail">กำลังประเมิน...</div></div>
+<div class="gate-score">—</div>
+</div>
+
+<!-- Master Score -->
+<div class="sh">WHA OS v2.7 MASTER SCORE</div>
+<div class="mcard">
+<div class="mcard-lbl">L3×15%+L4×20%+L5A×25%+L5B×20%+L6×15%</div>
+<div class="mcard-val" id="m-master" style="font-size:24px">—</div>
+<div class="mcard-sub" id="s-master">—</div>
+</div>
+
+<div style="font-size:9px;color:var(--muted);text-align:center;padding:6px" id="lastUpdated">กด ⟳ เพื่อดึงข้อมูล FRED</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════
+PAGE 2: MACRO + DATA SOURCE
+══════════════════════════ -->
+<div class="page" id="pg-macro">
+<div class="pad">
+
+<!-- Live charts -->
+<div class="sh">LIVE CHARTS (TradingView)</div>
+<div class="tv-grid">
+<div class="tv-mini" id="tv-vix"></div>
+<div class="tv-mini" id="tv-dxy"></div>
+<div class="tv-mini" id="tv-us10y"></div>
+</div>
+
+<!-- Status pills -->
+<div class="mini-status" id="macro-pills">
+<span class="ms-pill" id="mp-vix">VIX: —</span>
+<span class="ms-pill" id="mp-dxy">DXY: —</span>
+<span class="ms-pill" id="mp-hy">HY: —</span>
+<span class="ms-pill" id="mp-nli">NLI: —</span>
+<span class="ms-pill" id="mp-brent">BRENT: —</span>
+</div>
+
+<!-- Data Source Selector -->
+<div class="sh">DATA SOURCE</div>
+<div class="src-tabs">
+<div class="src-tab s-tv" id="stab-tv" onclick="setSrc('tv')">
+<div style="font-size:16px;margin-bottom:2px">📺</div>
+<div>TRADING<br>VIEW</div>
+</div>
+<div class="src-tab" id="stab-inv" onclick="setSrc('inv')">
+<div style="font-size:16px;margin-bottom:2px">📊</div>
+<div>INVESTING<br>.COM</div>
+</div>
+<div class="src-tab" id="stab-man" onclick="setSrc('man')">
+<div style="font-size:16px;margin-bottom:2px">✏️</div>
+<div>MANUAL<br>INPUT</div>
+</div>
+</div>
+
+<!-- SOURCE: TRADINGVIEW -->
+<div class="src-panel active" id="spanel-tv">
+<div style="font-size:10px;color:var(--dim);margin-bottom:8px;line-height:1.6">
+📺 กดปุ่มเปิด TradingView → อ่านค่าจาก Chart → กรอกกลับมา → SAVE
+</div>
+<!-- VIX -->
+<div class="card">
+<div class="card-hdr"><span class="card-title">VIX — CBOE:VIX</span>
+<a class="btn" href="https://www.tradingview.com/symbols/CBOE-VIX/" target="_blank">OPEN ↗</a>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">VIX Value</div><div class="idesc">&gt;25 Caution | &gt;35 Crisis</div></div>
+<input type="number" class="ifield" id="ov-vix" placeholder="auto" step="0.1" oninput="applyOvRecompute()">
+</div>
+</div>
+</div>
+<!-- DXY -->
+<div class="card">
+<div class="card-hdr"><span class="card-title">DXY — TVC:DXY</span>
+<a class="btn" href="https://www.tradingview.com/symbols/TVC-DXY/" target="_blank">OPEN ↗</a>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">DXY Value</div><div class="idesc">&gt;104 Strong | &gt;107 Extreme</div></div>
+<input type="number" class="ifield" id="ov-dxy" placeholder="auto" step="0.1" oninput="applyOvRecompute()">
+</div>
+</div>
+</div>
+<!-- Yield Curve -->
+<div class="card">
+<div class="card-hdr"><span class="card-title">YIELD CURVE</span>
+<div style="display:flex;gap:4px">
+<a class="btn" href="https://www.tradingview.com/symbols/TVC-US10Y/" target="_blank">10Y ↗</a>
+<a class="btn" href="https://www.tradingview.com/symbols/TVC-US02Y/" target="_blank">2Y ↗</a>
+</div>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">10Y Yield (%)</div></div>
+<input type="number" class="ifield" id="tv-10y" placeholder="—" step="0.01" oninput="calcYC()">
+</div>
+<div class="irow">
+<div><div class="iname">2Y Yield (%)</div></div>
+<input type="number" class="ifield" id="tv-2y" placeholder="—" step="0.01" oninput="calcYC()">
+</div>
+<div id="yc-result" style="padding:6px;background:var(--bg3);border-radius:var(--r);font-size:11px;color:var(--muted)">กรอก 10Y + 2Y เพื่อคำนวณ Yield Curve</div>
+</div>
+</div>
+<!-- Brent + Gold -->
+<div class="card">
+<div class="card-hdr"><span class="card-title">BRENT OIL + GOLD</span>
+<div style="display:flex;gap:4px">
+<a class="btn" href="https://www.tradingview.com/symbols/TVC-UKOIL/" target="_blank">OIL ↗</a>
+<a class="btn" href="https://www.tradingview.com/symbols/TVC-GOLD/" target="_blank">XAU ↗</a>
+</div>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">Brent Oil ($)</div><div class="idesc">&gt;$110+War=WAR_INFLATION | Unlock&lt;$95</div></div>
+<input type="number" class="ifield" id="i-brent" placeholder="85" step="0.1" oninput="saveRecompute()">
+</div>
+</div>
+</div>
+</div>
+
+<!-- SOURCE: INVESTING.COM -->
+<div class="src-panel" id="spanel-inv">
+<div style="font-size:10px;color:var(--dim);margin-bottom:8px;line-height:1.6">
+📊 กดปุ่มเปิด Investing.com → อ่านค่า (delay 15min) → กรอกกลับมา → SAVE
+</div>
+<div class="card">
+<div class="card-hdr"><span class="card-title">HY SPREAD</span>
+<div style="display:flex;gap:4px">
+<a class="btn" href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank">FRED ↗</a>
+<a class="btn" href="https://www.investing.com/rates-bonds/usa-credit-default-swap-5-year-spread" target="_blank">INV ↗</a>
+</div>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">HY Spread (bps)</div><div class="idesc">&lt;300 OK | &gt;500 Stress</div></div>
+<input type="number" class="ifield" id="ov-hy" placeholder="auto" step="1" oninput="applyOvRecompute()">
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-hdr"><span class="card-title">MOVE INDEX</span>
+<div style="display:flex;gap:4px">
+<a class="btn" href="https://www.investing.com/indices/move" target="_blank">INV ↗</a>
+<a class="btn" href="https://www.tradingview.com/symbols/INDEX-MOVE/" target="_blank">TV ↗</a>
+</div>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">MOVE Value</div><div class="idesc">&gt;130 Stress | &gt;150 Critical+REDUCED</div></div>
+<input type="number" class="ifield" id="i-move" placeholder="100" step="1" oninput="saveRecompute()">
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-hdr"><span class="card-title">REAL YIELD (TIPS) — v7.7 E1</span>
+<div style="display:flex;gap:4px">
+<a class="btn" href="https://fred.stlouisfed.org/series/DFII10" target="_blank">FRED ↗</a>
+<a class="btn" href="https://www.investing.com/rates-bonds/us-10-year-tips-bond-yield" target="_blank">INV ↗</a>
+</div>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">Real Yield (%)</div><div class="idesc">Negative = Gold bull</div></div>
+<input type="number" class="ifield" id="ov-ry" placeholder="0" step="0.1" oninput="applyOvRecompute()">
+</div>
+<div class="irow">
+<div><div class="iname">4W Change (%)</div><div class="idesc">&gt;+0.5% = G1 STANDALONE BLOCK (v7.7 E1)</div></div>
+<input type="number" class="ifield" id="ov-ry4w" placeholder="0" step="0.05" oninput="applyOvRecompute()">
+</div>
+<div id="ry4w-result" style="padding:6px;background:var(--bg3);border-radius:var(--r);font-size:10px;margin-top:4px;display:none"></div>
+</div>
+</div>
+<div class="card">
+<div class="card-hdr"><span class="card-title">PMI + SLOOS + M2 CHINA</span>
+<a class="btn" href="https://www.investing.com/economic-calendar/" target="_blank">CALENDAR ↗</a>
+</div>
+<div class="card-body">
+<div class="irow">
+<div><div class="iname">PMI (ISM)</div><div class="idesc">&gt;55 Growth | &lt;50 Contraction</div></div>
+<input type="number" class="ifield" id="i-pmi" placeholder="51" step="0.1" oninput="saveRecompute()">
+</div>
+<div class="irow">
+<div><div class="iname">SLOOS (%)</div><div class="idesc">+ve = Tighter lending = Bearish</div></div>
+<input type="number" class="ifield" id="ov-sloos" placeholder="0" step="1" oninput="applyOvRecompute()">
+</div>
+<div class="irow">
+<div><div class="iname">M2 China YoY (%)</div>
+<div class="idesc">&gt;8% Bullish | <a href="https://www.investing.com/economic-calendar/chinese-m2-money-stock-y-y-399" target="_blank" style="color:var(--accent)">INV ↗</a></div>
+</div>
+<input type="number" class="ifield" id="ov-m2cn" placeholder="8" step="0.1" oninput="applyOvRecompute()">
+</div>
+<div class="irow">
+<div><div class="iname">Copper/Gold Trend</div></div>
+<select class="isel" id="ov-copper" onchange="applyOvRecompute()">
+<option value="1">+1 Rising (Risk-On)</option>
+<option value="0" selected>0 Flat</option>
+<option value="-1">-1 Falling (Risk-Off)</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SOURCE: MANUAL -->
+<div class="src-panel" id="spanel-man">
+<div style="font-size:10px;color:var(--yellow);margin-bottom:8px">
+✏️ Override ค่าทั้งหมดโดยตรง — ค่าที่กรอกจะ override FRED auto-fetch
+</div>
+<div class="card">
+<div class="card-hdr"><span class="card-title">FRED LIQUIDITY</span>
+<a class="btn" href="https://fred.stlouisfed.org" target="_blank">FRED ↗</a>
+</div>
+<div class="card-body">
+<div class="irow"><div><div class="iname">Fed BS ($T)</div><div class="idesc">WALCL ÷ 1M</div></div><input type="number" class="ifield" id="ov-fedbs" placeholder="auto" step="0.01" oninput="applyOvRecompute()"></div>
+<div class="irow"><div><div class="iname">TGA ($B)</div><div class="idesc">WTREGEN</div></div><input type="number" class="ifield" id="ov-tga" placeholder="auto" step="1" oninput="applyOvRecompute()"></div>
+<div class="irow"><div><div class="iname">RRP ($B)</div><div class="idesc">RRPONTSYD</div></div><input type="number" class="ifield" id="ov-rrp" placeholder="auto" step="1" oninput="applyOvRecompute()"></div>
+<div class="irow"><div><div class="iname">M2 US ($B)</div><div class="idesc">WM2NS</div></div><input type="number" class="ifield" id="ov-m2" placeholder="auto" step="1" oninput="applyOvRecompute()"></div>
+<div id="nli-live" class="nli-calc" style="display:none">
+<div class="nli-row"><span>Fed BS</span><span id="nl-fb">—</span></div>
+<div class="nli-row"><span>− TGA</span><span id="nl-tga">—</span></div>
+<div class="nli-row"><span>− RRP</span><span id="nl-rrp">—</span></div>
+<div class="nli-total"><div style="display:flex;justify-content:space-between"><span>NLI</span><span id="nl-result">—</span></div></div>
+</div>
+<button class="btn" onclick="clearOv()" style="margin-top:8px;width:100%">↺ Clear all overrides</button>
+</div>
+</div>
+<!-- FRED API Key -->
+<div class="card">
+<div class="card-hdr"><span class="card-title">FRED API KEY</span></div>
+<div class="card-body">
+<div class="irow" style="gap:8px">
+<input type="password" class="ifield" id="fredKey" placeholder="32 ตัวอักษร" style="flex:1;width:auto;text-align:left">
+<button class="btn" onclick="saveFredKey()">SAVE</button>
+</div>
+<div id="fredKeyStatus" style="font-size:10px;color:var(--muted);margin-top:6px">
+ขอฟรีที่ <a href="https://fred.stlouisfed.org/docs/api/api_key.html" target="_blank" style="color:var(--accent)">fred.stlouisfed.org</a>
+</div>
+</div>
+</div>
+</div>
+
+<!-- NLI Summary -->
+<div class="sh">NET LIQUIDITY INDEX</div>
+<div class="mcard">
+<div class="mcard-lbl">NLI = FED BS (T) − TGA (T) − RRP (T)</div>
+<div class="mcard-val" id="m-nli" style="font-size:24px">—</div>
+<div class="mcard-sub" id="s-nli">—</div>
+</div>
+
+<!-- Macro Score -->
+<div class="mcard">
+<div class="mcard-lbl">MACRO SCORE (v7.7 — 8 Engine)</div>
+<div class="mcard-val" id="m-macro" style="font-size:24px">—</div>
+<div class="mcard-sub" id="s-macro">—</div>
+</div>
+
+<!-- Market context inputs -->
+<div class="sh">MARKET CONTEXT</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">War Active</div><div class="idesc">War+Brent&gt;$110 = G0 FREEZE (v7.7 FIX)</div></div><div class="tog" id="i-war" onclick="tog('i-war');saveRecompute()"><div class="tog-k"></div></div></div>
+<div class="irow"><div><div class="iname">Market Cycle</div><div class="idesc">DISTRIBUTION = Hard Block</div></div>
+<select class="isel" id="i-cycle" onchange="saveRecompute()">
+<option value="MARKUP">MARKUP ✅</option>
+<option value="ACCUMULATION">ACCUM ⚠️</option>
+<option value="DISTRIBUTION">DISTRIB 🔴</option>
+<option value="MARKDOWN">MARKDOWN 🔴</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">%Above 200DMA</div><div class="idesc">&gt;65%=Broad | &lt;20%=Deteriorating</div></div><input type="number" class="ifield" id="i-breadth" value="55" oninput="saveRecompute()"></div>
+<div class="irow"><div><div class="iname">Elliott Wave</div></div>
+<select class="isel" id="i-wave" onchange="saveRecompute()">
+<option value="W3">W3 (Full 1.0×)</option>
+<option value="W1">W1 (Half 0.5×)</option>
+<option value="W5">W5 (Reduce -25%)</option>
+<option value="ABC">ABC (Skip 0×)</option>
+<option value="NA" selected>ไม่แน่ใจ</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">SPX Level</div><div class="idesc">Unlock ④: SPX &gt; $6,764</div></div><input type="number" class="ifield" id="i-spx" value="5500" oninput="saveRecompute()"></div>
+</div>
+</div>
+
+<!-- Flow inputs -->
+<div class="sh">CAPITAL FLOW (L3)</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">COT Net</div></div>
+<select class="isel" id="i-cot" onchange="saveRecompute()">
+<option value="2">Long ↑↑</option><option value="1">Long ↑</option>
+<option value="0" selected>Neutral</option>
+<option value="-1">Short ↓</option><option value="-2">Short ↓↓</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">ETF Flow</div></div>
+<select class="isel" id="i-etf" onchange="saveRecompute()">
+<option value="1" selected>Inflow ✅</option>
+<option value="0">Neutral</option><option value="-1">Outflow 🔴</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">Dark Pool</div></div>
+<select class="isel" id="i-dp" onchange="saveRecompute()">
+<option value="accum">Accumulation ✅</option>
+<option value="neutral" selected>Neutral</option>
+<option value="distrib">Distribution 🔴</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">JPY Unwind</div><div class="idesc">Scalper v3.3: USDJPY&gt;0.8% = Auto CautionDay</div></div><div class="tog" id="i-jpy" onclick="tog('i-jpy');saveRecompute()"><div class="tog-k"></div></div></div>
+<div class="irow"><div><div class="iname">Insider Buying</div><div class="idesc">SEC Form 4 cluster 3+ insiders &gt;$100K</div></div><div class="tog" id="i-insider" onclick="tog('i-insider');saveRecompute()"><div class="tog-k"></div></div></div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════
+PAGE 3: ENTRY WIZARD
+══════════════════════════ -->
+<div class="page" id="pg-entry">
+
+<!-- Progress -->
+<div style="padding:10px 12px 0">
+<div class="wiz-progress">
+<div class="wiz-step active" id="wp1"></div>
+<div class="wiz-step" id="wp2"></div>
+<div class="wiz-step" id="wp3"></div>
+</div>
+<div class="wiz-labels">
+<span id="wl1" class="wl-active">STRUCTURE</span>
+<span id="wl2">TRIGGER</span>
+<span id="wl3">SIZING</span>
+</div>
+</div>
+
+<!-- WIZARD PAGE 1 — STRUCTURE -->
+<div class="wiz-page active" id="wiz1">
+<div class="wiz-hdr">
+<div class="wiz-num">STEP 1 / 3</div>
+<div class="wiz-title">STRUCTURE & SETUP</div>
+<div class="wiz-desc">ADX → Kumo → Fib → Model Selection<br>Always Rule #39: ADX First, Always</div>
+</div>
+
+<div class="pad" style="padding-top:0">
+<!-- Mini status from OS -->
+<div class="mini-status" id="wiz-os-status"></div>
+
+<!-- ADX -->
+<div class="sh">STEP 0 — ADX TREND FILTER (Never #30)</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">ADX (14)</div><div class="idesc">&lt;20 = NO TRADE | ≥35 = Strong</div></div><input type="number" class="ifield" id="w-adx" value="28" step="1" oninput="wiz1Compute()"></div>
+<div class="irow"><div><div class="iname">EMA Aligned</div><div class="idesc">20&gt;50&gt;100&gt;200 + Slope ≥15°</div></div><div class="tog" id="w-ema" onclick="tog('w-ema');wiz1Compute()"><div class="tog-k"></div></div></div>
+<div id="adx-out" style="padding:7px;background:var(--bg3);border-radius:var(--r);font-size:11px">—</div>
+</div>
+</div>
+
+<!-- Ichimoku -->
+<div class="sh">STEP 1 — ICHIMOKU KUMO (Never #31)</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">Price vs Kumo</div><div class="idesc">Inside/Below = NO TRADE</div></div>
+<select class="isel" id="w-kumo" onchange="wiz1Compute()">
+<option value="ABOVE">Above ✅</option>
+<option value="INSIDE">Inside 🔴</option>
+<option value="BELOW">Below 🔴</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">Kijun Pullback</div><div class="idesc">Price→Kijun + RSI 40-55 + Vol declining = Golden Entry</div></div><div class="tog" id="w-kijun" onclick="tog('w-kijun');wiz1Compute()"><div class="tog-k"></div></div></div>
+</div>
+</div>
+
+<!-- Fibonacci -->
+<div class="sh">STEP 2 — FIBONACCI (Never #32: Min Grade B)</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">Retracement Level</div><div class="idesc">38.2%=Full | 50%=Normal | 61.8%=Small</div></div>
+<select class="isel" id="w-fib" onchange="wiz1Compute()">
+<option value="0">ไม่อยู่ใน Zone</option>
+<option value="23.6">23.6% Shallow</option>
+<option value="38.2" selected>38.2% ⭐ Full</option>
+<option value="50">50.0% Normal</option>
+<option value="61.8">61.8% Small</option>
+<option value="78.6">78.6% Deep</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">Confluence Tools</div><div class="idesc">EMA/Kijun/Fractal/VWAP/Round# at same level<br>≥3 = A+ PRIME ENTRY</div></div><input type="number" class="ifield" id="w-conf" value="2" min="0" max="5" oninput="wiz1Compute()"></div>
+<div class="irow"><div><div class="iname">61.8% BREAK</div><div class="idesc">Close below 2+ candles = Trend DEAD → EXIT ALL</div></div><div class="tog" id="w-fibbreak" onclick="tog('w-fibbreak');wiz1Compute()"><div class="tog-k"></div></div></div>
+<div id="fib-out" style="padding:7px;background:var(--bg3);border-radius:var(--r);font-size:11px;margin-top:4px">—</div>
+</div>
+</div>
+
+<!-- Entry Model -->
+<div class="sh">STEP 7 — ENTRY MODEL</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">RSI (14)</div><div class="idesc">Pullback: 40-55 | A+ Long: &lt;30</div></div><input type="number" class="ifield" id="w-rsi" value="48" step="1" oninput="wiz1Compute()"></div>
+<div class="irow"><div><div class="iname">Volume vs MA20</div></div>
+<select class="isel" id="w-vol" onchange="wiz1Compute()">
+<option value="declining">Declining ✅ (Pullback)</option>
+<option value="normal">ปกติ</option>
+<option value="surge15">≥1.5× (Breakout)</option>
+<option value="surge20">≥2× (Squeeze)</option>
+</select>
+</div>
+<div id="model-out" style="padding:9px;background:var(--bg3);border-radius:var(--r);font-size:11px;margin-top:4px">—</div>
+</div>
+</div>
+
+<!-- Gate -->
+<div class="tgate" id="s1-gate" style="margin:0 0 10px">
+<div class="tg-lbl">STEP 1 GATE</div>
+<div class="tg-status" id="s1-status" style="color:var(--muted)">CHECKING...</div>
+<div class="tg-sub" id="s1-sub">กรอกข้อมูลให้ครบ</div>
+</div>
+</div>
+</div>
+
+<!-- WIZARD PAGE 2 — TRIGGER -->
+<div class="wiz-page" id="wiz2">
+<div class="wiz-hdr" style="border-left-color:var(--yellow)">
+<div class="wiz-num">STEP 2 / 3</div>
+<div class="wiz-title" style="color:var(--yellow)">ENTRY TRIGGER</div>
+<div class="wiz-desc">M15 Pattern + Candle Quality ± $10 ของ Level<br>ห้าม NEXT ถ้า Candle HARD BLOCK</div>
+</div>
+
+<div class="pad" style="padding-top:0">
+<div id="wiz2-summary" style="margin-bottom:8px"></div>
+
+<!-- Price -->
+<div class="sh">ราคาปัจจุบัน</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">Current Price ($)</div><div class="idesc">ราคา bid ปัจจุบัน</div></div><input type="number" class="ifield" id="w-price" placeholder="0" step="0.01" oninput="wiz2Compute()"></div>
+<div class="irow"><div><div class="iname">Level Price ($)</div><div class="idesc">Fib / EMA / Kijun target</div></div><input type="number" class="ifield" id="w-level" placeholder="0" step="0.01" oninput="wiz2Compute()"></div>
+<div class="irow"><div><div class="iname">Fractal Low ($)</div><div class="idesc">Williams 5-bar Swing Low → Fractal SL</div></div><input type="number" class="ifield" id="w-fractal" placeholder="0" step="0.01" oninput="wiz2Compute()"></div>
+<div id="prox-out" style="padding:6px;background:var(--bg3);border-radius:var(--r);font-size:10px;margin-top:4px;color:var(--muted)">ใส่ราคาเพื่อตรวจ proximity...</div>
+</div>
+</div>
+
+<!-- M15 Trigger -->
+<div class="sh">M15 TRIGGER — เลือกที่เห็นบน Chart</div>
+<div class="chk-list">
+<div class="chk" id="ct1" onclick="togChk('ct1');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">T1: Bullish Engulfing</div><div class="chk-sub">Body กลืนแท่งก่อน + close ใกล้ high</div></div><span class="chk-badge badge-r">LONG</span></div>
+<div class="chk" id="ct2" onclick="togChk('ct2');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">T2: Bearish Engulfing</div><div class="chk-sub">Body กลืนแท่งก่อน + close ใกล้ low</div></div><span class="chk-badge badge-r">SHORT</span></div>
+<div class="chk" id="ct3" onclick="togChk('ct3');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">T3: Pin Bar / Hammer</div><div class="chk-sub">Long shadow + small body ที่ level</div></div><span class="chk-badge badge-o">REVERSAL</span></div>
+<div class="chk" id="ct4" onclick="togChk('ct4');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">T4: M15 Structure Break</div><div class="chk-sub">M15 body close ทะลุ M15 swing</div></div><span class="chk-badge badge-o">BREAKOUT</span></div>
+</div>
+<div id="trigger-out" style="padding:6px;background:var(--bg3);border-radius:var(--r);font-size:10px;margin-bottom:8px;color:var(--muted)">เลือก M15 Trigger...</div>
+
+<!-- Candle Quality -->
+<div class="sh">CANDLE QUALITY — ตรวจแท่งที่จะเข้า</div>
+<div class="candle-guide">
+<div class="cg-row"><div class="cg-icon">✅</div><div><div class="cg-name">2-3 pass → PROCEED</div><div class="cg-cond">เข้า order ได้เลย</div></div></div>
+<div class="cg-row"><div class="cg-icon">⚠️</div><div><div class="cg-name">1 pass → DOWNGRADE Tier + ลด size 50%</div></div></div>
+<div class="cg-row"><div class="cg-icon">🔴</div><div><div class="cg-name">0 pass / Body&lt;30%+Wick&gt;2× → HARD BLOCK</div><div class="cg-cond">รอแท่งถัดไป ห้าม NEXT</div></div></div>
+</div>
+<div class="chk-list">
+<div class="chk" id="cq1" onclick="togChk('cq1');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">[A] Body ≥ 50% of candle range</div></div><span class="chk-badge badge-r">REQUIRED</span></div>
+<div class="chk" id="cq2" onclick="togChk('cq2');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">[B] Close ≥ 70% toward direction</div></div><span class="chk-badge badge-r">REQUIRED</span></div>
+<div class="chk" id="cq3" onclick="togChk('cq3');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">[C] Opposite wick ≤ 30% of range</div></div><span class="chk-badge badge-o">PREFERRED</span></div>
+<div class="chk" id="cqb" onclick="togChkBlock('cqb');wiz2Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">⛔ Body&lt;30% + Wick&gt;2× body</div><div class="chk-sub">HARD BLOCK — ข้ามแท่งนี้ทันที</div></div><span class="chk-badge badge-r">BLOCK</span></div>
+</div>
+<div id="cq-out" style="padding:6px;background:var(--bg3);border-radius:var(--r);font-size:10px;margin-bottom:8px;color:var(--muted)">ตรวจ Candle Quality...</div>
+
+<!-- Entry Zone -->
+<div class="entry-zone" id="entry-zone-card" style="display:none">
+<div class="ez-title">ENTRY ZONE — ผลวิเคราะห์</div>
+<div class="ez-row"><span class="ez-lbl">Entry Zone</span><span class="ez-val ca" id="ez-entry">—</span></div>
+<div class="ez-row"><span class="ez-lbl">Proximity to Level</span><span class="ez-val" id="ez-prox">—</span></div>
+<div class="ez-row"><span class="ez-lbl">Fractal SL</span><span class="ez-val cr" id="ez-fsl">—</span></div>
+<div class="ez-row"><span class="ez-lbl">Stop Loss</span><span class="ez-val cr" id="ez-stop">—</span></div>
+<div class="ez-row"><span class="ez-lbl">TP1 (Fib 127.2%)</span><span class="ez-val cy" id="ez-tp1">—</span></div>
+<div class="ez-row"><span class="ez-lbl">TP2 (Fib 161.8%)</span><span class="ez-val cg" id="ez-tp2">—</span></div>
+<div class="ez-row"><span class="ez-lbl">Trail (Fib 261.8%)</span><span class="ez-val cm" id="ez-tp3">—</span></div>
+<div class="ez-row"><span class="ez-lbl">R:R Ratio</span><span class="ez-val" id="ez-rr">—</span></div>
+</div>
+
+<!-- Gate -->
+<div class="tgate" id="s2-gate" style="margin:0 0 10px;border-color:var(--muted)">
+<div class="tg-lbl">TRIGGER GATE</div>
+<div class="tg-status" id="s2-status" style="color:var(--muted)">WAITING</div>
+<div class="tg-sub" id="s2-sub">ต้องได้ M15 Trigger + CQ ≥1 + ราคา</div>
+</div>
+</div>
+</div>
+
+<!-- WIZARD PAGE 3 — SIZING -->
+<div class="wiz-page" id="wiz3">
+<div class="wiz-hdr" style="border-left-color:var(--green)">
+<div class="wiz-num">STEP 3 / 3</div>
+<div class="wiz-title" style="color:var(--green)">SIZING & ORDER PLAN</div>
+<div class="wiz-desc">Pre-Mortem (Book 4 Ch.57) → Size → Order<br>ห้ามข้ามขั้นตอนนี้ (Always Rule #30)</div>
+</div>
+
+<div class="pad" style="padding-top:0">
+<div id="wiz3-summary" style="margin-bottom:8px"></div>
+
+<!-- PRE-MORTEM -->
+<div class="sh">PRE-MORTEM — Book 4 Ch.57</div>
+<div style="font-size:10px;color:var(--muted);margin-bottom:8px">0-1 ⚠ = PROCEED | 2-3 = REDUCE 30-50% | 4-5 = ABORT (Never #26)</div>
+<div class="chk-list">
+<div class="chk" id="pm1" onclick="togChkPM('pm1');wiz3Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">F1: Macro reversal</div><div class="chk-sub">Stop trigger ก่อน thesis invalid?</div></div></div>
+<div class="chk" id="pm2" onclick="togChkPM('pm2');wiz3Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">F2: Cycle wrong</div><div class="chk-sub">Earliest signal ที่รู้ว่าผิด?</div></div></div>
+<div class="chk" id="pm3" onclick="togChkPM('pm3');wiz3Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">F3: Company / Gap risk</div><div class="chk-sub">Gap risk acceptable? Stop placed correctly?</div></div></div>
+<div class="chk" id="pm4" onclick="togChkPM('pm4');wiz3Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">F4: Timing 6-12M off</div><div class="chk-sub">รับ -20-30% DD ได้ไหม?</div></div></div>
+<div class="chk" id="pm5" onclick="togChkPM('pm5');wiz3Compute()"><div class="chk-box">—</div><div class="chk-text"><div class="chk-name">F5: Cognitive bias</div><div class="chk-sub">จะเข้าถ้าไม่เห็น chart ก่อนไหม?</div></div></div>
+</div>
+<div id="pm-out" style="padding:8px;background:var(--bg3);border-radius:var(--r);font-size:12px;text-align:center;margin-bottom:10px">กรุณาประเมิน F1-F5</div>
+
+<!-- Behavioral biases (G5 v7.7) -->
+<div class="sh">BEHAVIORAL BIASES G5 (v7.7)</div>
+<div style="font-size:10px;color:var(--muted);margin-bottom:6px">≥2 = Warn | ≥3 = BLOCK</div>
+<div class="bias-grid">
+<div class="bias-card"><div><div class="bias-name">Anchoring</div><div class="bias-desc">ติดราคาเก่า</div></div><div class="tog" id="b-anchor" onclick="tog('b-anchor');wiz3Compute()"><div class="tog-k"></div></div></div>
+<div class="bias-card"><div><div class="bias-name">Recency</div><div class="bias-desc">หลงทิศล่าสุด</div></div><div class="tog" id="b-recency" onclick="tog('b-recency');wiz3Compute()"><div class="tog-k"></div></div></div>
+<div class="bias-card"><div><div class="bias-name">FOMO</div><div class="bias-desc">กลัวพลาดขบวน</div></div><div class="tog" id="b-fomo" onclick="tog('b-fomo');wiz3Compute()"><div class="tog-k"></div></div></div>
+<div class="bias-card"><div><div class="bias-name">Confirmation</div><div class="bias-desc">หา evidence ข้างเดียว</div></div><div class="tog" id="b-confirm" onclick="tog('b-confirm');wiz3Compute()"><div class="tog-k"></div></div></div>
+</div>
+<div id="bias-out" style="padding:6px;background:var(--bg3);border-radius:var(--r);font-size:10px;margin-bottom:10px;color:var(--muted)">ประเมิน Biases...</div>
+
+<!-- Sizing inputs -->
+<div class="sh">SIZING CALCULATOR</div>
+<div class="card">
+<div class="card-body">
+<div class="irow"><div><div class="iname">Portfolio (฿)</div></div><input type="number" class="ifield" id="s-cap" value="1143000" oninput="wiz3Compute()"></div>
+<div class="irow"><div><div class="iname">Win Rate (%)</div></div><input type="number" class="ifield" id="s-wr" value="55" step="1" oninput="wiz3Compute()"></div>
+<div class="irow"><div><div class="iname">Confluence Grade</div><div class="idesc">Auto-sync จาก Step 1</div></div>
+<select class="isel" id="s-grade" onchange="wiz3Compute()">
+<option value="Aplus">A+ (1.5%)</option>
+<option value="A">A (1.0%)</option>
+<option value="B" selected>B (0.5%)</option>
+<option value="C">C (0% — NO TRADE)</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">Daily Volatility (%)</div><div class="idesc">ATR% สำหรับ VaR</div></div><input type="number" class="ifield" id="s-vol" value="2.0" step="0.1" oninput="wiz3Compute()"></div>
+</div>
+</div>
+
+<!-- Result -->
+<div class="result-card" id="sizing-result" style="display:none">
+<div class="rc-row"><span class="rc-lbl">Risk Amount</span><span class="rc-val cy" id="r-risk">—</span></div>
+<div class="rc-row"><span class="rc-lbl">Shares / Units</span><span class="rc-val cg" id="r-shares">—</span></div>
+<div class="rc-row"><span class="rc-lbl">R:R Ratio</span><span class="rc-val" id="r-rr">—</span></div>
+<div class="rc-row"><span class="rc-lbl">Half-Kelly</span><span class="rc-val ca" id="r-kelly">—</span></div>
+<div class="rc-row"><span class="rc-lbl">VaR 95% (1-day)</span><span class="rc-val" id="r-var">—</span></div>
+<div class="rc-row"><span class="rc-lbl">Risk of Ruin</span><span class="rc-val" id="r-ror">—</span></div>
+<div class="rc-row"><span class="rc-lbl">Edge (Expectancy)</span><span class="rc-val" id="r-ev">—</span></div>
+<div class="rc-verdict" id="r-verdict">—</div>
+</div>
+
+<!-- Order Plan -->
+<div class="card" id="order-plan" style="display:none">
+<div class="card-hdr"><span class="card-title">ORDER PLAN — ทำตามลำดับนี้</span></div>
+<div class="card-body">
+<div id="op-1" style="padding:6px 0;border-bottom:1px solid var(--border);font-size:11px">1. Set Stop Loss FIRST: <span class="cr" id="op-stop">—</span></div>
+<div id="op-2" style="padding:6px 0;border-bottom:1px solid var(--border);font-size:11px">2. Entry Order: <span class="ca" id="op-entry">—</span></div>
+<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:11px">3. TP1 Alert (33%): <span class="cy" id="op-tp1">—</span></div>
+<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:11px">4. TP2 Alert (33%): <span class="cg" id="op-tp2">—</span></div>
+<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:11px">5. Trail 34% at 261.8%: <span class="cm" id="op-tp3">—</span></div>
+<div style="padding:6px 0;font-size:11px">6. Log in Journal (Ch.28) — Trade# | Grade | Model | Score</div>
+</div>
+</div>
+
+<!-- Final gate -->
+<div class="tgate" id="s3-gate" style="margin:0 0 10px;border-color:var(--muted)">
+<div class="tg-lbl">FINAL VERDICT</div>
+<div class="tg-status" id="s3-status" style="color:var(--muted)">CALCULATING</div>
+<div class="tg-sub" id="s3-sub">Pre-Mortem + Sizing</div>
+</div>
+</div>
+</div>
+
+<!-- Wiz Nav (sticky bottom within page) -->
+<div class="wiz-nav" id="wiz-nav-bar">
+<button class="wiz-btn" id="wiz-back" onclick="wizPrev()" disabled>← BACK</button>
+<button class="wiz-btn primary" id="wiz-next" onclick="wizNext()">NEXT →</button>
+</div>
+</div>
+
+<!-- ══════════════════════════
+PAGE 4: ASSET (Gold/BTC/Fund)
+══════════════════════════ -->
+<div class="page" id="pg-asset">
+<div class="pad">
+<!-- Asset selector -->
+<div style="display:flex;gap:6px;margin-bottom:10px">
+<button class="btn" id="ab-stock" onclick="selAsset('STOCK',this)" style="flex:1;border-radius:20px">📈 STOCK</button>
+<button class="btn" id="ab-gold" onclick="selAsset('GOLD',this)" style="flex:1;border-radius:20px">🥇 GOLD</button>
+<button class="btn" id="ab-btc" onclick="selAsset('BTC',this)" style="flex:1;border-radius:20px">₿ BTC</button>
+<button class="btn" id="ab-fund" onclick="selAsset('FUND',this)" style="flex:1;border-radius:20px">📦 FUND</button>
+</div>
+
+<!-- GOLD -->
+<div id="asset-GOLD" style="display:none">
+<div class="sh">GOLD ENGINE (v7.7 Ch.6.2)</div>
+<div class="card"><div class="card-body">
+<div class="irow"><div><div class="iname">Real Yield Level (%)</div><div class="idesc">Negative = Gold bull | auto-reads Macro tab</div></div><input type="number" class="ifield" id="g-ry" value="-0.2" step="0.1" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">Real Yield 4W Change</div><div class="idesc">&gt;+0.5% = Standalone G1 BLOCK</div></div><input type="number" class="ifield" id="g-ryc" value="0.1" step="0.05" oninput="syncRY();recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">DXY 4W Trend</div><div class="idesc">Negative = Tailwind</div></div><input type="number" class="ifield" id="g-dxt" value="-1.5" step="0.5" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">COT Gold Percentile (3yr)</div><div class="idesc">&lt;10% = Contrarian Buy</div></div><input type="number" class="ifield" id="g-cot" value="65" min="0" max="100" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">Gold/SPX Corr</div><div class="idesc">Negative = Hedge working</div></div><input type="number" class="ifield" id="g-corr" value="-0.4" step="0.1" oninput="recomputeAsset()"></div>
+</div></div>
+<div id="gold-result"></div>
+</div>
+
+<!-- BTC -->
+<div id="asset-BTC" style="display:none">
+<div class="sh">BTC ENGINE (Scalper v3.3 + On-chain)</div>
+<div class="card"><div class="card-body">
+<div class="irow"><div><div class="iname">Funding Rate (%)</div><div class="idesc">&gt;0.03% Overleveraged | &lt;-0.01% Squeeze</div></div><input type="number" class="ifield" id="b-fr" value="0.01" step="0.005" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">SOPR</div><div class="idesc">&lt;0.98 Cap Buy | &gt;1.05 Distribution</div></div><input type="number" class="ifield" id="b-sopr" value="1.01" step="0.01" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">NVT Ratio</div><div class="idesc">&lt;50 Under | &gt;100 Over</div></div><input type="number" class="ifield" id="b-nvt" value="65" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">Exchange Flow</div></div>
+<select class="isel" id="b-flow" onchange="recomputeAsset()">
+<option value="-2000">Outflow ✅</option>
+<option value="0" selected>Neutral</option>
+<option value="6000">Inflow 🔴</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">LTH Supply</div></div>
+<select class="isel" id="b-lth" onchange="recomputeAsset()">
+<option value="1">Accumulating ✅</option>
+<option value="-1">Distributing 🔴</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">BTC vs NQ Align</div><div class="idesc">Scalper v3.3: BTC↑+NQ↓ = A+→Std</div></div>
+<select class="isel" id="b-nq" onchange="recomputeAsset()">
+<option value="aligned">Both Rising ✅</option>
+<option value="btc-alone">BTC↑+NQ↓ ⚠️</option>
+<option value="both-down">Both Falling 🔴</option>
+</select>
+</div>
+</div></div>
+<div id="btc-result"></div>
+</div>
+
+<!-- FUND -->
+<div id="asset-FUND" style="display:none">
+<div class="sh">FUND ENGINE (RMF/SSF)</div>
+<div class="card"><div class="card-body">
+<div class="irow" style="flex-direction:column;align-items:stretch;gap:6px">
+<div class="iname">ชื่อกองทุน</div>
+<input type="text" class="ifield" id="f-name" list="fund-suggest" placeholder="เช่น SCB-US500 RMF..." autocomplete="off" style="width:100%;text-align:left" oninput="recomputeAsset()">
+<datalist id="fund-suggest">
+<option value="BBL BDynamic RMF"></option>
+<option value="ASP FRF RMF"></option><option value="SCBRM2 RMF"></option>
+<option value="ASP PowerRMF"></option><option value="ASP DigiBlock RMF"></option>
+<option value="SCB-US500 RMF"></option><option value="SCBVIET RMF"></option>
+<option value="KFUS500 RMF"></option>
+</datalist>
+</div>
+<div class="irow"><div><div class="iname">ประเภท</div><div class="idesc">RMF→RMF only | SSF→SSF only</div></div>
+<select class="isel" id="f-type" onchange="recomputeAsset()">
+<option value="RMF">RMF</option><option value="SSF">SSF</option>
+<option value="OPEN">Open-End</option><option value="ETF">ETF</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">บลจ.</div></div>
+<select class="isel" id="f-co" onchange="recomputeAsset()">
+<option value="BBLAM">BBLAM</option><option value="ASP">ASP</option>
+<option value="SCBAM">SCBAM</option><option value="KAsset">KAsset</option>
+<option value="OTHER">Other</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">หมวดสินทรัพย์</div></div>
+<select class="isel" id="f-cat" onchange="recomputeAsset()">
+<option value="EQUITY">Equity</option><option value="MIXED">Mixed</option>
+<option value="BOND">Bond</option><option value="MONEY_MARKET">Money Market</option>
+<option value="GOLD">Gold</option><option value="REIT">REIT</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">NAV 1M (%)</div></div><input type="number" class="ifield" id="f-nav" value="1.2" step="0.1" oninput="recomputeAsset()"></div>
+<div class="irow"><div><div class="iname">Fund Flow YTD</div></div>
+<select class="isel" id="f-flow" onchange="recomputeAsset()">
+<option value="1">Inflow ✅</option><option value="-1">Outflow 🔴</option>
+</select>
+</div>
+</div></div>
+<div id="fund-result"></div>
+</div>
+
+<!-- STOCK placeholder -->
+<div id="asset-STOCK">
+<div style="text-align:center;padding:30px;color:var(--muted);font-size:11px;line-height:1.8">
+สำหรับหุ้น ดูผล Gates ที่ OVERVIEW<br>
+กรอก Technical ที่ ENTRY → STEP 1<br>
+กรอก Market Data ที่ MACRO tab<br><br>
+<span style="color:var(--accent)">Pipeline: L0→L1A→L1B→L1C→L2A→L2B→L3→L4→L5→L6→L7→L8</span>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════
+PAGE 5: SCALPER OS v3.3
+══════════════════════════ -->
+<div class="page" id="pg-scalper">
+<div class="pad">
+
+<div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:var(--r);padding:10px 12px;margin-bottom:10px">
+<div style="font-size:9px;color:var(--yellow);letter-spacing:2px;margin-bottom:4px">SCALPER OS v3.3 ACTIVATED</div>
+<div style="font-size:10px;color:var(--dim)">Gold/BTC CFD Intraday · ฿100,000 Isolated Capital</div>
+</div>
+
+<!-- Phase selector -->
+<div class="sh">PHASE</div>
+<div class="scalper-phase">
+<button class="phase-btn active" id="sp0" onclick="setPhase(0)">PHASE 0<br><span style="font-size:8px">CHECKLIST</span></button>
+<button class="phase-btn" id="sp1" onclick="setPhase(1)">PHASE 1<br><span style="font-size:8px">TEST A+</span></button>
+<button class="phase-btn" id="sp2" onclick="setPhase(2)">PHASE 2<br><span style="font-size:8px">LIVE</span></button>
+</div>
+
+<!-- Caution Day + JPY -->
+<div class="sh">PRE-SESSION CHECK (v3.3)</div>
+<div class="card"><div class="card-body">
+<div class="irow"><div><div class="iname">JPY Unwind</div><div class="idesc">USDJPY &gt;0.8% London / &gt;1.2% 24H = Auto CautionDay</div></div><div class="tog" id="sc-jpy" onclick="tog('sc-jpy');scCompute()"><div class="tog-k"></div></div></div>
+<div class="irow"><div><div class="iname">2+ High-Impact Events Today</div></div><div class="tog" id="sc-news" onclick="tog('sc-news');scCompute()"><div class="tog-k"></div></div></div>
+<div class="irow"><div><div class="iname">DXY moved &gt;1.0% today</div></div><div class="tog" id="sc-dxy" onclick="tog('sc-dxy');scCompute()"><div class="tog-k"></div></div></div>
+<div id="caution-out" style="padding:7px;background:var(--bg3);border-radius:var(--r);font-size:11px;margin-top:4px">กำลังประเมิน...</div>
+</div></div>
+
+<!-- Final Risk Formula (v3.2) -->
+<div class="sh">FINAL RISK FORMULA (v3.2 CF-1)</div>
+<div class="card"><div class="card-body">
+<div class="irow"><div><div class="iname">Setup Type</div></div>
+<select class="isel" id="sc-setup" onchange="scCompute()">
+<option value="Aplus">A+</option>
+<option value="Std" selected>Standard</option>
+<option value="B1">B-Type1</option>
+<option value="B2">B-Type2</option>
+</select>
+</div>
+<div class="irow"><div><div class="iname">Trade Score (0-10)</div><div class="idesc">≥8=×1.0 | 6-7=×0.5 | &lt;6=NO TRADE</div></div><input type="number" class="ifield" id="sc-score" value="8" min="0" max="10" oninput="scCompute()"></div>
+<div class="irow"><div><div class="iname">Win Streak</div><div class="idesc">0-2=×1.0 | ≥3=×0.5 (cross-session)</div></div><input type="number" class="ifield" id="sc-streak" value="0" min="0" oninput="scCompute()"></div>
+<div class="irow"><div><div class="iname">ATR Regime</div><div class="idesc">Phase 2 only: High Vol=×0.75</div></div>
+<select class="isel" id="sc-atr" onchange="scCompute()">
+<option value="1.0">Normal/Low ATR ×1.0</option>
+<option value="0.75">High Vol ATR ×0.75</option>
+</select>
+</div>
+</div></div>
+
+<div class="risk-formula" id="sc-formula">
+<div class="rf-row"><span class="rf-label">Base Risk</span><span id="rf-base">—</span></div>
+<div class="rf-row"><span class="rf-label">× Score Modifier</span><span id="rf-score">—</span></div>
+<div class="rf-row"><span class="rf-label">× Streak Modifier</span><span id="rf-streak">—</span></div>
+<div class="rf-row"><span class="rf-label">× ATR Modifier</span><span id="rf-atr">—</span></div>
+<div class="rf-total"><div style="display:flex;justify-content:space-between"><span>= FINAL RISK</span><span id="rf-total">—</span></div></div>
+</div>
+
+<!-- Restrictions counter -->
+<div class="sh">HARD RESTRICTIONS (Max 3 = NO TRADE)</div>
+<div class="card"><div class="card-body">
+<div class="irow"><div><div class="iname">Pre-Choppy Warning</div><div class="idesc">Pre-BOS both sides + RSI 40-60 + Vol&lt;80%</div></div><div class="tog" id="sc-choppy" onclick="tog('sc-choppy');scCompute()"><div class="tog-k"></div></div></div>
+<div class="irow"><div><div class="iname">Regime Transition</div><div class="idesc">ATR zone changed within session</div></div><div class="tog" id="sc-regime" onclick="tog('sc-regime');scCompute()"><div class="tog-k"></div></div></div>
+<div class="irow"><div><div class="iname">Clustering Suspension</div><div class="idesc">3 losses same setup+direction Grade A + Score≥8</div></div><div class="tog" id="sc-cluster" onclick="tog('sc-cluster');scCompute()"><div class="tog-k"></div></div></div>
+<div id="restrict-out" style="padding:7px;background:var(--bg3);border-radius:var(--r);font-size:11px;margin-top:4px">—</div>
+</div></div>
+
+<!-- Session limits -->
+<div class="sh">CIRCUIT BREAKER</div>
+<div class="card"><div class="card-body">
+<div class="irow"><div><div class="iname">Losses Today</div><div class="idesc">≥3 = 50% risk, review | ≥2+no A+ = stop</div></div><input type="number" class="ifield" id="sc-losses" value="0" min="0" oninput="scCompute()"></div>
+<div class="irow"><div><div class="iname">P&L Today (฿)</div><div class="idesc">≤-4,000 = STOP day | ≤-8,000 wk = STOP week</div></div><input type="number" class="ifield" id="sc-pnl" value="0" step="100" oninput="scCompute()"></div>
+</div></div>
+
+<div class
+...
